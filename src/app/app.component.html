@@ -7,31 +7,70 @@
 
 <table style="border: 1px solid black;">
   <tr>
+    <th colspan="11">Uso do solo</th>
+  </tr>
+  <tr>
     <td>
-      <div>
-        <button (click)="envLicensing()">Licenciamento Ambiental</button>
-      </div>
+      <button (click)="soilUsage()">Tudo</button>
     </td>
     <td>
-      <div>
-        <button (click)="urbanLicensing()">Licenciamento Urbano</button>
-      </div>
+      <button (click)="soilUsage('Habitacional')">Habitacional</button>
     </td>
     <td>
-      <div>
-        <button (click)="soilUsage()">Uso do solo</button>
-      </div>
+      <button (click)="soilUsage('Comercial')">Comercial</button>
+    </td>
+    <td>
+      <button (click)="soilUsage('Misto')">Misto</button>
+    </td>
+    <td>
+      <button (click)="soilUsage('Industrial')">Industrial</button>
+    </td>
+    <td>
+      <button (click)="soilUsage('Especial')">Especial</button>
+    </td>
+    <td>
+      <button (click)="soilUsage('Hospitalar')">Hospitalar</button>
+    </td>
+    <td>
+      <button (click)="soilUsage('Educacional')">Educacional</button>
+    </td>
+    <td>
+      <button (click)="soilUsage('Institucional')">Institucional</button>
+    </td>
+    <td>
+      <button (click)="soilUsage('Religioso')">Religioso</button>
+    </td>
+    <td>
+      <button (click)="soilUsage('Terreno')">Terreno</button>
+    </td>
+  </tr>
+</table>
+
+<br>
+
+<table style="border: 1px solid black;">
+  <tr>
+    <td>
+      <button (click)="envLicensing()">Licenciamento Ambiental</button>
+    </td>
+    <td>
+      <button (click)="urbanLicensing()">Licenciamento Urbano</button>
+    </td>
+  </tr>
+</table>
+
+<br>
+
+<table style="border: 1px solid black;">
+  <tr>
+    <td>
+      <button (click)="clearLayers()">Limpar</button>
     </td>
   </tr>
   <tr>
     <td>
-      <div>
-        <button (click)="clearLayers()">Limpar</button>
-      </div>
+      Buffer:
+      <input type="number" [(ngModel)]="buffer" style="width: 80px;"/>
     </td>
-  </tr>
-  <tr>
-    Buffer:
-    <input type="number" [(ngModel)]="buffer" style="width: 80px;"/>
   </tr>
 </table>

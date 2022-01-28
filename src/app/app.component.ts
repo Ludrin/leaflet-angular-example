@@ -100,11 +100,16 @@ export class AppComponent implements OnInit {
     this.getLayer('urbanLicensing', 'cyan');
   }
 
-  soilUsage() {
-    this.getLayer('soilUsage', 'darkcyan', true);
+  soilUsage(soilCategory?: string) {
+    this.getLayer('soilUsage', 'darkcyan', { soilCategory }, true);
   }
 
-  private getLayer(layer: string, color: string, isGeoJson = false) {
+  private getLayer(
+    layer: string,
+    color: string,
+    filter?: any,
+    isGeoJson = false
+  ) {
     const features = this.getActiveLayers();
     if (!features || features.length === 0) {
       return;
@@ -116,12 +121,12 @@ export class AppComponent implements OnInit {
       layer: layer,
       searchAreas: searchAreas,
       buffer: this.buffer,
+      filter,
     };
 
     const options = {
       headers: {
-        Authorization:
-          `Bearer ${environment.jwtToken}`,
+        Authorization: `Bearer ${environment.jwtToken}`,
       },
     };
 
