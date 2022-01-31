@@ -104,6 +104,10 @@ export class AppComponent implements OnInit {
     this.getLayer('soilUsage', 'darkcyan', { soilCategory }, true);
   }
 
+  builtArea() {
+    this.getLayer('builtArea', 'darkcyan', {}, true);
+  }
+
   private getLayer(
     layer: string,
     color: string,
