@@ -93,27 +93,57 @@ export class AppComponent implements OnInit {
   }
 
   envLicensing() {
-    this.getLayer('environmentalLicensing', 'magenta');
+    this.getLayer('environmentalLicensing', {
+      radius: 1,
+      color: 'magenta',
+      weight: 2,
+    });
   }
 
   urbanLicensing() {
-    this.getLayer('urbanLicensing', 'cyan');
+    this.getLayer('urbanLicensing', { radius: 1, color: 'cyan', weight: 2 });
   }
 
   soilUsage(soilCategory?: string) {
-    this.getLayer('soilUsage', 'darkcyan', { soilCategory }, true);
+    this.getLayer(
+      'soilUsage',
+      { color: 'darkcyan', weight: 2 },
+      { soilCategory },
+      true
+    );
   }
 
   builtArea() {
-    this.getLayer('builtArea', 'darkcyan', {}, true);
+    this.getLayer(
+      'builtArea',
+      {
+        fillColor: 'black',
+        color: 'black',
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.8,
+      },
+      {},
+      true
+    );
   }
 
-  private getLayer(
-    layer: string,
-    color: string,
-    filter?: any,
-    isGeoJson = false
-  ) {
+  nonBuiltArea() {
+    this.getLayer(
+      'nonBuiltArea',
+      {
+        fillColor: 'white',
+        color: 'white',
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.8,
+      },
+      {},
+      true
+    );
+  }
+
+  private getLayer(layer: string, style: any, filter?: any, isGeoJson = false) {
     const features = this.getActiveLayers();
     if (!features || features.length === 0) {
       return;
@@ -141,7 +171,7 @@ export class AppComponent implements OnInit {
           const circles = data[layer].map((info: any) => {
             return circle(
               [info.geometry.coordinates[1], info.geometry.coordinates[0]],
-              { radius: 1, color: color, weight: 2 }
+              style
             ).bindPopup(setPopupMessage(info.properties));
           });
 
@@ -149,7 +179,7 @@ export class AppComponent implements OnInit {
         } else {
           const geoJsons = data[layer].map((info: any) => {
             return geoJSON(info as any, {
-              style: () => ({ color: color, weight: 2 }),
+              style: () => style,
             }).bindPopup(setPopupMessage(info.properties));
           });
 
