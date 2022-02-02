@@ -228,7 +228,11 @@ export class AppComponent implements OnInit {
   }
 }
 
-function setPopupMessage(properties: any[]): string {
+function setPopupMessage(properties?: any[]): string {
+  if (!properties || properties.length === 0) {
+    return '<br />'
+  }
+
   let popupMessage = '';
   for (const [key, value] of Object.entries(properties)) {
     popupMessage = popupMessage + `${key}: ${value}<br />`;
