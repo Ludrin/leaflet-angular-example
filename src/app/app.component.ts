@@ -72,7 +72,7 @@ export class AppComponent implements OnInit {
         }),
 
         Corredores: geoJSON(corredores as any, {
-          style: () => ({ color: 'green', weight: 2 }),
+          style: () => ({ color: 'darkolivegreen', weight: 2 }),
         }).bindPopup(function (layer: any) {
           return layer.feature.properties.Layer;
         }),
@@ -102,6 +102,10 @@ export class AppComponent implements OnInit {
 
   urbanLicensing() {
     this.getLayer('urbanLicensing', { radius: 1, color: 'cyan', weight: 2 });
+  }
+
+  tree() {
+    this.getLayer('tree', { radius: 1, color: 'green', weight: 2 })
   }
 
   soilUsage(soilCategory?: string) {
