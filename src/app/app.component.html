@@ -14,34 +14,37 @@
       <button (click)="soilUsage()">Tudo</button>
     </td>
     <td>
-      <button (click)="soilUsage('Habitacional')">Habitacional</button>
+      <button (click)="soilUsage(['Habitacional'])">Habitacional</button>
     </td>
     <td>
-      <button (click)="soilUsage('Comercial')">Comercial</button>
+      <button (click)="soilUsage(['Comercial'])">Comercial</button>
     </td>
     <td>
-      <button (click)="soilUsage('Misto')">Misto</button>
+      <button (click)="soilUsage(['Misto'])">Misto</button>
     </td>
     <td>
-      <button (click)="soilUsage('Industrial')">Industrial</button>
+      <button (click)="soilUsage(['Industrial'])">Industrial</button>
     </td>
     <td>
-      <button (click)="soilUsage('Especial')">Especial</button>
+      <button (click)="soilUsage(['Especial'])">Especial</button>
     </td>
     <td>
-      <button (click)="soilUsage('Hospitalar')">Hospitalar</button>
+      <button (click)="soilUsage(['Hospitalar'])">Hospitalar</button>
     </td>
     <td>
-      <button (click)="soilUsage('Educacional')">Educacional</button>
+      <button (click)="soilUsage(['Educacional'])">Educacional</button>
     </td>
     <td>
-      <button (click)="soilUsage('Institucional')">Institucional</button>
+      <button (click)="soilUsage(['Institucional'])">Institucional</button>
     </td>
     <td>
-      <button (click)="soilUsage('Religioso')">Religioso</button>
+      <button (click)="soilUsage(['Religioso'])">Religioso</button>
     </td>
     <td>
-      <button (click)="soilUsage('Terreno')">Terreno</button>
+      <button (click)="soilUsage(['Terreno'])">Terreno</button>
+    </td>
+    <td>
+      <button (click)="soilUsage(['Misto', 'Industrial'])">Misto e Industrial</button>
     </td>
   </tr>
 </table>
@@ -67,10 +70,13 @@
 <table style="border: 1px solid black;">
   <tr>
     <td>
+      <button (click)="nonBuiltArea()">Áreas não construídas</button>
+    </td>
+    <td>
       <button (click)="builtArea()">Áreas construídas</button>
     </td>
     <td>
-      <button (click)="nonBuiltArea()">Áreas não construídas</button>
+      <button (click)="figureGround()">Cheios x Vazios</button>
     </td>
   </tr>
 </table>

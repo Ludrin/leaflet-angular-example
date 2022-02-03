@@ -12,6 +12,15 @@ import { corredores } from './constants/corredores.constants';
 import { infiltracoes } from './constants/infiltracoes.constants';
 import { trechos } from './constants/trechos.constants';
 
+interface layerSearch {
+  name: string;
+  filter?: {
+    soilCategories?: string[];
+  };
+  isGeoJson: boolean;
+  style: any;
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -93,61 +102,110 @@ export class AppComponent implements OnInit {
   }
 
   envLicensing() {
-    this.getLayer('environmentalLicensing', {
-      radius: 1,
-      color: 'magenta',
-      weight: 2,
-    });
+    this.getLayer([
+      {
+        name: 'environmentalLicensing',
+        isGeoJson: false,
+        style: {
+          radius: 1,
+          color: 'magenta',
+          weight: 2,
+        },
+      },
+    ]);
   }
 
   urbanLicensing() {
-    this.getLayer('urbanLicensing', { radius: 1, color: 'cyan', weight: 2 });
+    this.getLayer([
+      {
+        name: 'urbanLicensing',
+        isGeoJson: false,
+        style: { radius: 1, color: 'cyan', weight: 2 },
+      },
+    ]);
   }
 
   tree() {
-    this.getLayer('tree', { radius: 1, color: 'green', weight: 2 })
+    this.getLayer([
+      {
+        name: 'tree',
+        isGeoJson: false,
+        style: { radius: 1, color: 'green', weight: 2 },
+      },
+    ]);
   }
 
-  soilUsage(soilCategory?: string) {
-    this.getLayer(
-      'soilUsage',
-      { color: 'darkcyan', weight: 2 },
-      { soilCategory },
-      true
-    );
+  soilUsage(soilCategories?: string[]) {
+    this.getLayer([
+      {
+        name: 'soilUsage',
+        style: { color: 'darkcyan', weight: 2 },
+        filter: { soilCategories },
+        isGeoJson: true,
+      },
+    ]);
   }
 
   builtArea() {
-    this.getLayer(
-      'builtArea',
+    this.getLayer([
       {
-        fillColor: 'black',
-        color: 'black',
-        weight: 2,
-        opacity: 1,
-        fillOpacity: 0.8,
+        name: 'builtArea',
+        style: {
+          fillColor: 'black',
+          color: 'black',
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0.8,
+        },
+        isGeoJson: true,
       },
-      {},
-      true
-    );
+    ]);
   }
 
   nonBuiltArea() {
-    this.getLayer(
-      'nonBuiltArea',
+    this.getLayer([
       {
-        fillColor: 'white',
-        color: 'white',
-        weight: 2,
-        opacity: 1,
-        fillOpacity: 0.8,
+        name: 'nonBuiltArea',
+        style: {
+          fillColor: 'white',
+          color: 'white',
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0.8,
+        },
+        isGeoJson: true,
       },
-      {},
-      true
-    );
+    ]);
   }
 
-  private getLayer(layer: string, style: any, filter?: any, isGeoJson = false) {
+  figureGround() {
+    this.getLayer([
+      {
+        name: 'nonBuiltArea',
+        style: {
+          fillColor: 'white',
+          color: 'white',
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0.8,
+        },
+        isGeoJson: true,
+      },
+      {
+        name: 'builtArea',
+        style: {
+          fillColor: 'black',
+          color: 'black',
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0.8,
+        },
+        isGeoJson: true,
+      },
+    ]);
+  }
+
+  private getLayer(layersSearch: layerSearch[]) {
     const features = this.getActiveLayers();
     if (!features || features.length === 0) {
       return;
@@ -155,11 +213,17 @@ export class AppComponent implements OnInit {
 
     const searchAreas = features.map((feature) => feature.geometry);
 
+    const layers = layersSearch.map((layerSearch) => {
+      return {
+        name: layerSearch.name,
+        filter: layerSearch.filter,
+      };
+    });
+
     const body = {
-      layer: layer,
+      layers: layers,
       searchAreas: searchAreas,
       buffer: this.buffer,
-      filter,
     };
 
     const options = {
@@ -171,23 +235,25 @@ export class AppComponent implements OnInit {
     this.http
       .post<any>(`${environment.apiUrl}`, body, options)
       .subscribe((data) => {
-        if (!isGeoJson) {
-          const circles = data[layer].map((info: any) => {
-            return circle(
-              [info.geometry.coordinates[1], info.geometry.coordinates[0]],
-              style
-            ).bindPopup(setPopupMessage(info.properties));
-          });
+        for (const layerSearch of layersSearch) {
+          if (!layerSearch.isGeoJson) {
+            const circles = data[layerSearch.name].map((info: any) => {
+              return circle(
+                [info.geometry.coordinates[1], info.geometry.coordinates[0]],
+                layerSearch.style
+              ).bindPopup(setPopupMessage(info.properties));
+            });
 
-          this.layers.push(...circles);
-        } else {
-          const geoJsons = data[layer].map((info: any) => {
-            return geoJSON(info as any, {
-              style: () => style,
-            }).bindPopup(setPopupMessage(info.properties));
-          });
+            this.layers.push(...circles);
+          } else {
+            const geoJsons = data[layerSearch.name].map((info: any) => {
+              return geoJSON(info as any, {
+                style: () => layerSearch.style,
+              }).bindPopup(setPopupMessage(info.properties));
+            });
 
-          this.layers.push(...geoJsons);
+            this.layers.push(...geoJsons);
+          }
         }
       });
   }
@@ -230,7 +296,7 @@ export class AppComponent implements OnInit {
 
 function setPopupMessage(properties?: any[]): string {
   if (!properties || properties.length === 0) {
-    return '<br />'
+    return '<br />';
   }
 
   let popupMessage = '';
